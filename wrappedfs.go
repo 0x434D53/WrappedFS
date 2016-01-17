@@ -1,6 +1,9 @@
 package wrappedfs
 
-import "net/http"
+import (
+	"net/http"
+	"path"
+)
 
 type WrappedFS struct {
 	fs  http.FileSystem
@@ -8,9 +11,14 @@ type WrappedFS struct {
 }
 
 func (wfs *WrappedFS) Open(name string) (http.File, error) {
-	return nil, nil
+	name = path.Clean(name)
+	name = path.Join(wfs.dir, name)
+
+	return wfs.fs.Open(name)
 }
 
-func NewWrappedFS(fs http.FileSystem, path string) (http.FileSystem, error) {
-	return nil, nil
+func NewWrappedFS(fs http.FileSystem, dir string) http.FileSystem {
+	wfs := WrappedFS{fs: fs, dir: path.Clean(dir)}
+
+	return &wfs
 }
