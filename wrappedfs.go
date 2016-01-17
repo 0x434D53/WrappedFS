@@ -1,8 +1,11 @@
 package wrappedfs
 
 import (
+	"fmt"
 	"net/http"
 	"path"
+	"path/filepath"
+	"strings"
 )
 
 type WrappedFS struct {
@@ -11,10 +14,14 @@ type WrappedFS struct {
 }
 
 func (wfs *WrappedFS) Open(name string) (http.File, error) {
-	name = path.Clean(name)
-	name = path.Join(wfs.dir, name)
+	if filepath.Separator != '/' && strings.IndexRune(name, filepath.Separator) >= 0 || strings.Contains(name, "\x00") {
+		return nil, fmt.Errorf("Invalid character in file path")
+	}
 
-	return wfs.fs.Open(name)
+	dir := wfs.dir
+	path := filepath.Join(dir, filepath.FromSlash(path.Clean("/"+name)))
+
+	return wfs.fs.Open(path)
 }
 
 func NewWrappedFS(fs http.FileSystem, dir string) http.FileSystem {

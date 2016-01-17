@@ -84,3 +84,14 @@ func TestWrappedFS(t *testing.T) {
 		t.Fatalf("//p2 shoud be found. Wasn't")
 	}
 }
+
+func TestEscaping(t *testing.T) {
+	fs := &mockFS{path: "/p1/p2"}
+	wfs := NewWrappedFS(fs, "/p3")
+
+	_, err := wfs.Open("../p1/p2")
+
+	if err != os.ErrNotExist {
+		t.Fatalf("The Path escaped the Prefix. Should NOT be possible")
+	}
+}
