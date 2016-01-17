@@ -67,3 +67,20 @@ func TestMockFS(t *testing.T) {
 		t.Fatalf("In case of error the returned file should be nil")
 	}
 }
+
+func TestWrappedFS(t *testing.T) {
+	fs := &mockFS{path: "/p1/p2"}
+	wfs := NewWrappedFS(fs, "/p1")
+
+	_, err := wfs.Open("/p2")
+
+	if err != nil {
+		t.Fatalf("/p2 should be found. Wasn't")
+	}
+
+	_, err = wfs.Open("//p2")
+
+	if err != nil {
+		t.Fatalf("//p2 shoud be found. Wasn't")
+	}
+}
