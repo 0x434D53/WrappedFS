@@ -70,7 +70,7 @@ func TestMockFS(t *testing.T) {
 
 func TestWrappedFS(t *testing.T) {
 	fs := &mockFS{path: "/p1/p2"}
-	wfs := NewWrappedFS(fs, "/p1")
+	wfs := New(fs, "/p1")
 
 	_, err := wfs.Open("/p2")
 
@@ -87,7 +87,7 @@ func TestWrappedFS(t *testing.T) {
 
 func TestEscaping(t *testing.T) {
 	fs := &mockFS{path: "/p1/p2"}
-	wfs := NewWrappedFS(fs, "/p3")
+	wfs := New(fs, "/p3")
 
 	_, err := wfs.Open("../p1/p2")
 
