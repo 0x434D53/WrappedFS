@@ -6,3 +6,4 @@ go:
 
 install:
   - go get github.com/rakyll/statik
+  - go get github.com/0x434d53/wrappedfs/example
