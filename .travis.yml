@@ -6,4 +6,3 @@ go:
 
 install:
   - go get github.com/rakyll/statik
-  - go test
